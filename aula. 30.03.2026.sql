@@ -29,12 +29,24 @@ JSON_CONTAINS(Y, '"1234-5678"', "$.telefone") = 1;
 
 #JSON_SEARCH
 /*Permite encontrar um VALOR em qualquer
-propriedade*/
+proprieJSON_SEARCH()dade*/
 SELECT JSON_SEARCH(Y, "ONE", "Maria") FROM X;
 
+/*Exercício da aula 30.03.2026*/
+SELECT * FROM countryinfo ORDER BY _id;
 
+-- JSON_EXTRACT()
+SELECT JSON_EXTRACT(Info, '$.populacao') AS populacao FROM countryinfo;
 
+-- JSON_KEYS()
+SELECT JSON_KEYS(json_doc[, path]);
 
+-- JSON_SEARCH()
+SELECT JSON_SEARCH(json_doc, one_or_all, search_str[, escape_char[, path] ...])
 
+-- JSON_CONTAINS()
+SELECT JSON_CONTAINS(target_json, candidate_json[, path]);
 
+-- JSON_CONTAINS_PATH()
+SELECT JSON_CONTAINS_PATH(json_doc, one_or_all, path[, path] ...);
 
