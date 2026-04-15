@@ -22,4 +22,15 @@ coluna para Sexo, Parentesco, Data de Nascimento e Nome
 o INNER JOIN para adicionar 
 o nome do deparatamento (tb_departamento). */
 
+SELECT T1.PARENTESCO, T1.SEXO, T1.DATA_NASCIMENTO, T1.NOME_DEPENDENTE
+FROM tb_object_funcionario
+CROSS JOIN
+JSON_TABLE(
+JSON_EXTRACT(JSON, "$.Dependentes"), "$[*]"
+COLUMNS(PARENTESCO VARCHAR(20) PATH "$.Parentesco",
+SEXO VARCHAR(2) PATH "$.Sexo",
+DATA_NASCIMENTO DATETIME PATH "$.Data_Nascimento",
+NOME_DEPENDENTE VARCHAR(50) PATH "$.Nome_Dependente")
+) AS T1;
+
 
