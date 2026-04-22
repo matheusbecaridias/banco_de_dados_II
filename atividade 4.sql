@@ -33,8 +33,35 @@ WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(c.data, '$.GNP')) AS DECIMAL(10,2)) > 50000
 o conteúdo do campo JSON apenas para os funcionários com pelo menos um dependente do sexo Feminino. */
 
 
+SELECT 
+    CONCAT(f.PRIMEIRO_NOME, ' ', f.NOME_MEIO, ' ', f.ULTIMO_NOME) AS NOME_FUNCIONARIO,
+    obj.JSON
+FROM tb_funcionario f
+INNER JOIN tb_object_funcionario obj 
+    ON f.CPF = obj.CPF
+WHERE f.CPF IN (
+    SELECT DISTINCT CPF_FUNCIONARIO
+    FROM tb_dependente
+    WHERE SEXO = 'F'
+);
 
 /*Consulta 4: Utilizando a função JSON_TABLE, retorne todos os dependentes cadastrados no banco de dados. 
 A consulta deve retornar: o nome, parentesco e data de nascimento do dependente e o nome do funcionário. */
 
-
+SELECT 
+    CONCAT(f.PRIMEIRO_NOME, ' ', f.NOME_MEIO, ' ', f.ULTIMO_NOME) AS NOME_FUNCIONARIO,
+    jt.NOME_DEPENDENTE,
+    jt.PARENTESCO,
+    jt.DATA_NASCIMENTO
+FROM tb_object_funcionario obj
+INNER JOIN tb_funcionario f 
+    ON obj.CPF = f.CPF
+CROSS JOIN JSON_TABLE(
+    obj.JSON,
+    '$.dependentes[*]'
+    COLUMNS (
+        NOME_DEPENDENTE  VARCHAR(100) PATH '$.nome',
+        PARENTESCO       VARCHAR(50)  PATH '$.parentesco',
+        DATA_NASCIMENTO  DATE         PATH '$.data_nascimento'
+    )
+) AS jt;
