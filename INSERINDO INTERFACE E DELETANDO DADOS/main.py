@@ -6,10 +6,10 @@ app = Flask(__name__)
 app.secret_key = "chave_secreta_para_alertas_flash"
 
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',  # Adicione sua senha do MySQL aqui
-    'database': 'sistema_clientes'
+    "host": "localhost",
+    "user": "root",
+    "password": "",  # Adicione sua senha do MySQL aqui
+    "database": "sistema_clientes",
 }
 
 
@@ -24,7 +24,7 @@ def obter_conexao_banco():
     return None
 
 
-@app.route('/')
+@app.route("/")
 def index():
     """Rota principal que exibe o formulário de cadastro e a tabela de clientes cadastrados."""
     clientes = []
@@ -44,23 +44,26 @@ def index():
             if conexao.is_connected():
                 conexao.close()
     else:
-        flash("Não foi possível conectar ao banco de dados MySQL local. Verifique as configurações.", "erro")
+        flash(
+            "Não foi possível conectar ao banco de dados MySQL local. Verifique as configurações.",
+            "erro",
+        )
 
-    return render_template('index.html', clientes=clientes)
+    return render_template("index.html", clientes=clientes)
 
 
-@app.route('/cadastrar', methods=['POST'])
+@app.route("/cadastrar", methods=["POST"])
 def cadastrar_cliente():
     """Rota responsável por processar o envio do formulário e salvar o cliente no MySQL."""
-    nome = request.form.get('nome')
-    cpf = request.form.get('cpf')
-    email = request.form.get('email')
-    telefone = request.form.get('telefone')
+    nome = request.form.get("nome")
+    cpf = request.form.get("cpf")
+    email = request.form.get("email")
+    telefone = request.form.get("telefone")
 
-    cpf_limpo = ''.join(filter(str.isdigit, cpf)) if cpf else ''
+    cpf_limpo = "".join(filter(str.isdigit, cpf)) if cpf else ""
     if not nome or not cpf_limpo or not email:
         flash("Nome, CPF e E-mail são campos obrigatórios!", "erro")
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
 
     conexao = obter_conexao_banco()
     if conexao:
@@ -84,10 +87,10 @@ def cadastrar_cliente():
     else:
         flash("Banco de dados offline. Cadastro não realizado.", "erro")
 
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
-@app.route('/excluir/<cpf>', methods=['POST'])
+@app.route("/excluir/<cpf>", methods=["POST"])
 def excluir_cliente(cpf):
     """Rota para deletar com segurança um cliente utilizando o CPF como identificador exclusivo."""
     conexao = obter_conexao_banco()
@@ -110,8 +113,8 @@ def excluir_cliente(cpf):
     else:
         flash("Banco de dados offline. Não foi possível realizar a exclusão.", "erro")
 
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
