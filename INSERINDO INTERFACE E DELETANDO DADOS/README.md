@@ -1,4 +1,5 @@
 INSERINDO INTERFACE E DELETANDO DADOS
+
 Após finalizar a integração entre a página web, o servidor
 Flask e o Banco de Dados, vamos incrementar a aplicação, ou
 seja, adicionar outras funcionalidades.
