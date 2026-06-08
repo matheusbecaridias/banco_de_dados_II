@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-br">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro clientes</title>
+  </head>
+  <body>
+    <h1>Cadastro de Clientes</h1>
+
+    <form action="/cadastrar" method="post">
+      <label for="c_cpf">CPF</label>
+      <input
+        type="text"
+        name="cpf"
+        id="c_cpf"
+        placeholder="000.000.000-00"
+        maxlength="11"
+        required
+      />
+
+      <label for="c_primeiro_nome">PRIMEIRO NOME</label>
+      <input
+        type="text"
+        name="primeiro_nome"
+        id="c_primeiro_nome"
+        placeholder="Digite seu nome"
+        required
+      />
+
+      <label for="c_sobrenome">SOBRENOME</label>
+      <input
+        type="text"
+        name="sobrenome"
+        id="c_sobrenome"
+        placeholder="Digite seu sobrenome"
+        required
+      />
+
+      <label for="c_idade">IDADE</label>
+      <input
+        type="number"
+        name="idade"
+        id="c_idade"
+        placeholder="18"
+        min="1"
+        max="120"
+        required
+      />
+
+      <button type="submit">CADASTRAR</button>
+    </form>
+    <h2>Lista de Clientes</h2>
+    <table>
+      <thead>
+        <th>CPF</th>
+        <th>Primeiro Nome</th>
+        <th>Sobrenome</th>
+        <th>Idade</th>
+      </thead>
+      <tbody>
+        {%-for cliente in clientes %}
+        <tr>
+          <td>{{cliente.CPF}}</td>
+          <td>{{cliente.PRIMEIRO_NOME}}</td>
+          <td>{{cliente.SOBRENOME}}</td>
+          <td>{{cliente.IDADE}}</td>
+          <td>
+            <form action="/deletar" method="post" style="display: inline;">
+            <input type="hidden" name="cpf" value="{{ cliente.cpf }}">
+            <button type="submit">Deletar</button>
+          </form>
+          </td>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  </body>
+</html>
