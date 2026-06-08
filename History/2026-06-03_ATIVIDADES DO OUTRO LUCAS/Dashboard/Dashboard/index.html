@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Help Desk — Sistema de Chamados</title>
+<link rel="stylesheet" href="style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-icon">⬡</span>
+    <div>
+      <div class="brand-name">HELP DESK</div>
+      <div class="brand-sub">Sistema de Chamados v2.0</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <a class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+      <span class="nav-icon">▦</span> Dashboard
+    </a>
+    <a class="nav-item" data-page="abrir" onclick="showPage('abrir')">
+      <span class="nav-icon">＋</span> Abrir Chamado
+    </a>
+    <a class="nav-item" data-page="chamados" onclick="showPage('chamados')">
+      <span class="nav-icon">≡</span> Chamados
+    </a>
+    <a class="nav-item" data-page="ranking" onclick="showPage('ranking')">
+      <span class="nav-icon">◈</span> Ranking
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <span id="clock-side"></span>
+    <span class="dot-live"></span> AO VIVO
+  </div>
+</aside>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="page-label" id="page-label">DASHBOARD</span>
+    </div>
+    <div class="topbar-right">
+      <span id="clock-top"></span>
+      <div class="status-pill">
+        <span class="status-dot"></span> MySQL Conectado
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── PAGE: DASHBOARD ─── -->
+  <section class="page active" id="page-dashboard">
+    <div class="metrics-grid">
+      <div class="metric-card accent-blue">
+        <div class="metric-label">TOTAL DE CHAMADOS</div>
+        <div class="metric-value" id="m-total">—</div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:100%"></div></div>
+      </div>
+      <div class="metric-card accent-amber">
+        <div class="metric-label">EM ABERTO</div>
+        <div class="metric-value" id="m-open">—</div>
+        <div class="metric-bar"><div id="bar-open" class="metric-bar-fill"></div></div>
+      </div>
+      <div class="metric-card accent-green">
+        <div class="metric-label">FINALIZADOS</div>
+        <div class="metric-value" id="m-done">—</div>
+        <div class="metric-bar"><div id="bar-done" class="metric-bar-fill"></div></div>
+      </div>
+      <div class="metric-card accent-coral">
+        <div class="metric-label">PRIORIDADE ALTA</div>
+        <div class="metric-value" id="m-high">—</div>
+        <div class="metric-bar"><div id="bar-high" class="metric-bar-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="panel">
+        <div class="panel-head">CHAMADOS RECENTES</div>
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Equipamento</th><th>Técnico</th><th>Prioridade</th><th>Status</th><th>Abertura</th></tr></thead>
+          <tbody id="tbl-recent"></tbody>
+        </table>
+      </div>
+
+      <div class="panel" style="min-width:0">
+        <div class="panel-head">DISTRIBUIÇÃO POR PRIORIDADE</div>
+        <div class="prio-chart" id="prio-chart"></div>
+
+        <div class="panel-head" style="margin-top:1.5rem">TOP TÉCNICOS</div>
+        <div id="rank-mini"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PAGE: ABRIR CHAMADO ─── -->
+  <section class="page" id="page-abrir">
+    <div class="form-wrap">
+      <div class="panel">
+        <div class="panel-head">NOVO CHAMADO</div>
+        <form class="hd-form" onsubmit="abrirChamado(event)">
+          <div class="field">
+            <label>EQUIPAMENTO</label>
+            <input type="text" id="f-equip" placeholder="Ex: Notebook Dell XPS 15" required/>
+          </div>
+          <div class="field">
+            <label>PROBLEMA IDENTIFICADO</label>
+            <textarea id="f-problema" rows="4" placeholder="Descreva o problema em detalhes..." required></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>PRIORIDADE</label>
+              <select id="f-prio" required>
+                <option value="">Selecione...</option>
+                <option value="1">🔴 Alto</option>
+                <option value="2">🟡 Médio</option>
+                <option value="3">🟢 Baixo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>TÉCNICO RESPONSÁVEL</label>
+              <input type="text" id="f-tec" placeholder="Nome completo" required/>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">ABRIR CHAMADO →</button>
+        </form>
+      </div>
+
+      <div class="panel" id="confirm-box" style="display:none">
+        <div class="panel-head">CHAMADO REGISTRADO</div>
+        <div class="confirm-content" id="confirm-content"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PAGE: CHAMADOS ─── -->
+  <section class="page" id="page-chamados">
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label>STATUS</label>
+        <select id="flt-status" onchange="renderChamados()">
+          <option value="">Todos</option>
+          <option value="Aberto">Aberto</option>
+          <option value="Finalizado">Finalizado</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>PRIORIDADE</label>
+        <select id="flt-prio" onchange="renderChamados()">
+          <option value="">Todas</option>
+          <option value="1">🔴 Alto</option>
+          <option value="2">🟡 Médio</option>
+          <option value="3">🟢 Baixo</option>
+        </select>
+      </div>
+      <div class="filter-group" style="flex:1">
+        <label>BUSCAR</label>
+        <input type="text" id="flt-search" placeholder="Equipamento, técnico..." oninput="renderChamados()"/>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="data-table full">
+        <thead><tr>
+          <th>#</th><th>Equipamento</th><th>Problema</th>
+          <th>Técnico</th><th>Prioridade</th><th>Status</th>
+          <th>Abertura</th><th>Fechamento</th><th></th>
+        </tr></thead>
+        <tbody id="tbl-chamados"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ─── PAGE: RANKING ─── -->
+  <section class="page" id="page-ranking">
+    <div class="panel">
+      <div class="panel-head">RANKING COMPLETO DE TÉCNICOS</div>
+      <div id="rank-full"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════ MODAL FINALIZAR ═══════════════════ -->
+<div class="modal-overlay" id="modal" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">FINALIZAR CHAMADO <button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal()">CANCELAR</button>
+      <button class="btn-danger" id="btn-confirm-fin">CONFIRMAR →</button>
+    </div>
+  </div>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

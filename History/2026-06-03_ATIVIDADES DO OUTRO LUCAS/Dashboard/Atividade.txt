@@ -1,0 +1,95 @@
+﻿Lista de Tarefas — Sistema Help Desk (Python)
+1. Estrutura Geral do Sistema
+* [ ] Definir arquitetura básica do sistema
+* [ ] Escolher banco de dados (SQLite, MySQL ou PostgreSQL)
+* [ ] Criar estrutura inicial do projeto em Python
+* [ ] Configurar conexão com o banco de dados
+________________
+
+
+2. Menu Principal
+Criar menu com opções
+* [ ] Implementar menu principal
+* [ ] Adicionar navegação entre funcionalidades
+* [ ] Criar opções:
+   * [ ] Abrir chamado
+   * [ ] Finalizar chamado
+   * [ ] Ranking de técnicos
+   * [ ] Dashboard
+   * [ ] Sair do sistema
+________________
+
+
+3. Funcionalidade: Criar Chamado
+Campos necessários
+* [ ] Campo: Equipamento
+* [ ] Campo: Problema identificado
+* [ ] Campo: Nível de prioridade
+   * [ ] Alto
+   * [ ] Médio
+   * [ ] Baixo
+* [ ] Campo: Técnico responsável
+Persistência de dados
+* [ ] Salvar chamado no banco de dados
+* [ ] Gerar ID único para cada chamado
+* [ ] Registrar data e hora de abertura
+________________
+
+
+4. Banco de Dados (BD)
+Estrutura da tabela de chamados
+* [ ] Criar tabela chamados
+* [ ] Adicionar colunas:
+   * [ ] id
+   * [ ] equipamento
+   * [ ] problema
+   * [ ] prioridade
+   * [ ] tecnico_responsavel
+   * [ ] status
+   * [ ] data_abertura
+   * [ ] data_fechamento
+Estrutura da tabela de técnicos
+* [ ] Criar tabela tecnicos
+* [ ] Adicionar colunas:
+   * [ ] id
+   * [ ] nome
+   * [ ] quantidade_chamados
+________________
+
+
+5. Ranking dos Técnicos
+* [ ] Criar consulta ao banco de dados
+* [ ] Contabilizar quantidade de chamados por técnico
+* [ ] Ordenar ranking por número de chamados realizados
+* [ ] Exibir:
+   * [ ] Nome do técnico
+   * [ ] Quantidade de chamados realizados
+________________
+
+
+6. Finalizar Chamado
+* [ ] Criar funcionalidade de encerramento
+* [ ] Alterar status do chamado para “Finalizado”
+* [ ] Registrar data e hora de fechamento
+* [ ] Atualizar informações no banco de dados
+________________
+
+
+7. Dashboard
+Informações gerais
+* [ ] Exibir total de chamados
+* [ ] Exibir chamados abertos
+* [ ] Exibir chamados finalizados
+* [ ] Exibir chamados por prioridade
+* [ ] Exibir ranking dos técnicos
+________________
+
+
+8. Melhorias Futuras
+* [ ] Interface gráfica (Tkinter, PyQt ou Web)
+* [ ] Sistema de login
+* [ ] Controle de permissões
+* [ ] Exportação de relatórios PDF/Excel
+* [ ] Notificações automáticas
+* [ ] Integração com IA para classificação automática de chamados
+* [ ] Histórico completo de atendimentos
